@@ -110,6 +110,16 @@ class Timecode
     }
 
     /**
+     * Convert the Timecode to its corresponding number of seconds
+     *
+     * @return float
+     */
+    public function convertToSeconds() : float
+    {
+        return (float) ($this->convertToFrames() / $this->framerate);
+    }
+
+    /**
      * @return string
      */
     public function __toString() : string

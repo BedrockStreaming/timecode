@@ -240,6 +240,75 @@ class Timecode extends atoum\test
     }
 
     /**
+     * @dataProvider convertToSecondsDataProvider
+     */
+    public function testConvertToSeconds(
+        $hours = null,
+        $minutes = null,
+        $seconds = null,
+        $frames = null,
+        $framerate = null,
+        $expectedSeconds = null
+    ) {
+        $this
+            ->given(
+                is_null($framerate) ? $this->newTestedInstance($hours, $minutes, $seconds, $frames) : $this->newTestedInstance($hours, $minutes, $seconds, $frames, $framerate)
+            )
+            ->when(
+                $numberOfSeconds = $this->testedInstance->convertToSeconds()
+            )
+            ->then
+                ->float($numberOfSeconds)->isIdenticalTo($expectedSeconds)
+        ;
+    }
+
+    protected function convertToSecondsDataProvider()
+    {
+        return [
+            'only seconds' => [
+                0,
+                0,
+                30,
+                0,
+                null,
+                (float) 30,
+            ],
+            'only seconds with a different framerate should give the same result' => [
+                0,
+                0,
+                30,
+                0,
+                25.5,
+                (float) 30,
+            ],
+            'hours, minutes, seconds' => [
+                1,
+                15,
+                30,
+                0,
+                null,
+                (float) 4530,
+            ],
+            'only frames' => [
+                0,
+                0,
+                0,
+                1,
+                25,
+                (float) 0.04,
+            ],
+            'hours, minutes, seconds, frames with 25 framerate' => [
+                1,
+                15,
+                30,
+                1,
+                25,
+                (float) 4530.04,
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider addDataProvider
      */
     public function testAdd(
