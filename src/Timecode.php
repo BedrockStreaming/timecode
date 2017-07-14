@@ -73,10 +73,10 @@ class Timecode
         if (!empty($matches['hours']) && !empty($matches['minutes']) && !empty($matches['seconds']) && !empty($matches['frames'])) {
             // @codingStandardsIgnoreStart
             return new self(
-                (int) $matches['hours'],
-                (int) $matches['minutes'],
-                (int) $matches['seconds'],
-                (int) $matches['frames'],
+                $matches['hours'],
+                $matches['minutes'],
+                $matches['seconds'],
+                $matches['frames'],
                 $framerate
             );
             // @codingStandardsIgnoreEnd
@@ -88,10 +88,10 @@ class Timecode
         if (!empty($matches['hours']) && !empty($matches['minutes']) && !empty($matches['seconds']) && !empty($matches['ms'])) {
             // @codingStandardsIgnoreStart
             return new self(
-                (int) $matches['hours'],
-                (int) $matches['minutes'],
-                (int) $matches['seconds'],
-                TimeConverter::millisecondsToFrames((int) $matches['ms'], $framerate),
+                $matches['hours'],
+                $matches['minutes'],
+                $matches['seconds'],
+                TimeConverter::millisecondsToFrames($matches['ms'], $framerate),
                 $framerate
             );
             // @codingStandardsIgnoreEnd
