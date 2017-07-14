@@ -25,6 +25,21 @@ class Timecode extends atoum\test
             ->given(
                 $testedClass = $this->testedClass->getClass()
             )
+        ;
+
+        // Handle exceptions
+        if (is_null($expectedHours) || is_null($expectedMinutes) || is_null($expectedSeconds) || is_null($expectedFrames) || is_null($expectedFramerate)) {
+            $this->exception(function() use ($testedClass, $timecodeStr, $framerate) {
+                is_null($framerate) ? $testedClass::createFromString($timecodeStr) : $testedClass::createFromString($timecodeStr, $framerate);
+            })
+                ->isInstanceOf('InvalidArgumentException')
+                ->hasMessage('Unsupported string notation.')
+            ;
+
+            return;
+        }
+
+        $this
             ->when(
                 /** @var \M6Web\Component\Timecode\Timecode $timecode */
                 $timecode = is_null($framerate) ? $testedClass::createFromString($timecodeStr) : $testedClass::createFromString($timecodeStr, $framerate)
@@ -41,7 +56,16 @@ class Timecode extends atoum\test
     protected function createFromStringDataProvider()
     {
         return [
-            'default framerate' => [
+            'unsupported notation' => [
+                '12345.345.6543:12',
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+            ],
+            'hours:minutes:seconds:frames default framerate' => [
                 '09:02:00:03',
                 null,
                 9,
@@ -50,7 +74,7 @@ class Timecode extends atoum\test
                 3,
                 (float) 25,
             ],
-            'int framerate' => [
+            'hours:minutes:seconds:frames int framerate' => [
                 '99:59:59:59',
                 60,
                 99,
@@ -59,8 +83,35 @@ class Timecode extends atoum\test
                 59,
                 (float) 60,
             ],
-            'float framerate' => [
+            'hours:minutes:seconds:frames float framerate' => [
                 '99:59:59:28',
+                29.97,
+                99,
+                59,
+                59,
+                28,
+                (float) 29.97,
+            ],
+            'hours:minutes:seconds.milliseconds default framerate' => [
+                '09:02:00.120',
+                null,
+                9,
+                2,
+                0,
+                3,
+                (float) 25,
+            ],
+            'hours:minutes:seconds.milliseconds int framerate' => [
+                '99:59:59.999',
+                60,
+                99,
+                59,
+                59,
+                59,
+                (float) 60,
+            ],
+            'hours:minutes:seconds.milliseconds float framerate' => [
+                '99:59:59.940',
                 29.97,
                 99,
                 59,

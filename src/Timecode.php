@@ -54,7 +54,11 @@ class Timecode
     }
 
     /**
-     * Create a Timecode object from its string representation.
+     * Create a Timecode object from a string representation.
+     *
+     * Supported notations are:
+     * - "hours:minutes:seconds:frames"
+     * - "hours:minutes:seconds.milliseconds"
      *
      * @param string $timecodeStr
      * @param float  $framerate   By default, we use 25 which is the PAL or SECAM standard.
@@ -63,11 +67,37 @@ class Timecode
      */
     public static function createFromString(string $timecodeStr, float $framerate = self::DEFAULT_FRAMERATE) : self
     {
-        list($hours, $minutes, $seconds, $frames) = explode(':', $timecodeStr);
+        // Support "hours:minutes:seconds:frames" notation
+        $matches = [];
+        preg_match('@^(?P<hours>^\d{1,3}):(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2}):(?P<frames>\d{1,2})$@', $timecodeStr, $matches);
+        if (!empty($matches['hours']) && !empty($matches['minutes']) && !empty($matches['seconds']) && !empty($matches['frames'])) {
+            // @codingStandardsIgnoreStart
+            return new self(
+                (int) $matches['hours'],
+                (int) $matches['minutes'],
+                (int) $matches['seconds'],
+                (int) $matches['frames'],
+                $framerate
+            );
+            // @codingStandardsIgnoreEnd
+        }
 
-        // @codingStandardsIgnoreStart
-        return new self((int) $hours, (int) $minutes, (int) $seconds, (int) $frames, $framerate);
-        // @codingStandardsIgnoreEnd
+        // Support "hours:minutes:seconds.milliseconds" notation
+        $matches = [];
+        preg_match('@^(?P<hours>^\d{1,3}):(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2})\.(?P<ms>\d{1,3})$@', $timecodeStr, $matches);
+        if (!empty($matches['hours']) && !empty($matches['minutes']) && !empty($matches['seconds']) && !empty($matches['ms'])) {
+            // @codingStandardsIgnoreStart
+            return new self(
+                (int) $matches['hours'],
+                (int) $matches['minutes'],
+                (int) $matches['seconds'],
+                TimeConverter::millisecondsToFrames((int) $matches['ms'], $framerate),
+                $framerate
+            );
+            // @codingStandardsIgnoreEnd
+        }
+
+        throw new \InvalidArgumentException('Unsupported string notation.');
     }
 
     /**
