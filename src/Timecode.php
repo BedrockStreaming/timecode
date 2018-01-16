@@ -68,9 +68,7 @@ class Timecode
     public static function createFromString(string $timecodeStr, float $framerate = self::DEFAULT_FRAMERATE) : self
     {
         // Support "hours:minutes:seconds:frames" notation
-        $matches = [];
-        preg_match('@^(?P<hours>^\d{1,3}):(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2}):(?P<frames>\d{1,2})$@', $timecodeStr, $matches);
-        if (!empty($matches['hours']) && !empty($matches['minutes']) && !empty($matches['seconds']) && !empty($matches['frames'])) {
+        if (!empty($matches = self::isFrameTimecode($timecodeStr))) {
             // @codingStandardsIgnoreStart
             return new self(
                 $matches['hours'],
@@ -83,9 +81,7 @@ class Timecode
         }
 
         // Support "hours:minutes:seconds.milliseconds" notation
-        $matches = [];
-        preg_match('@^(?P<hours>^\d{1,3}):(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2})\.(?P<ms>\d{1,3})$@', $timecodeStr, $matches);
-        if (!empty($matches['hours']) && !empty($matches['minutes']) && !empty($matches['seconds']) && !empty($matches['ms'])) {
+        if (!empty($matches = self::isMillisecondsTimecode($timecodeStr))) {
             // @codingStandardsIgnoreStart
             return new self(
                 $matches['hours'],
@@ -98,6 +94,44 @@ class Timecode
         }
 
         throw new \InvalidArgumentException('Unsupported string notation.');
+    }
+
+    /**
+     * Check if timecode use frame
+     * if is valid return each part of timecode
+     * if not, return empty array
+     *
+     * @param string $timecodeStr
+     *
+     * @return array
+     */
+    public static function isFrameTimecode(string $timecodeStr): array
+    {
+        preg_match('@^(?P<hours>^\d{1,3}):(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2}):(?P<frames>\d{1,2})$@', $timecodeStr, $matches);
+        if (!empty($matches['hours']) && !empty($matches['minutes']) && !empty($matches['seconds']) && !empty($matches['frames'])) {
+            return $matches;
+        }
+
+        return [];
+    }
+
+    /**
+     * Check if timecode use milliseconds
+     * if is valid return each part of timecode
+     * if not, return empty array
+     *
+     * @param string $timecodeStr
+     *
+     * @return array
+     */
+    public static function isMillisecondsTimecode(string $timecodeStr): array
+    {
+        preg_match('@^(?P<hours>^\d{1,3}):(?P<minutes>\d{1,2}):(?P<seconds>\d{1,2})\.(?P<ms>\d{1,3})$@', $timecodeStr, $matches);
+        if (!empty($matches['hours']) && !empty($matches['minutes']) && !empty($matches['seconds']) && !empty($matches['ms'])) {
+            return $matches;
+        }
+
+        return [];
     }
 
     /**
