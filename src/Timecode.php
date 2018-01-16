@@ -116,7 +116,7 @@ class Timecode
     }
 
     /**
-     * Check if timecode use millisecondes
+     * Check if timecode use milliseconds
      * if is valid return each part of timecode
      * if not, return empty array
      *
