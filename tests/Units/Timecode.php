@@ -2,7 +2,7 @@
 
 namespace M6Web\Component\Timecode\Tests\Units;
 
-use atoum;
+use atoum\atoum;
 
 /**
  * Timecode test class
@@ -29,7 +29,7 @@ class Timecode extends atoum\test
 
         // Handle exceptions
         if (is_null($expectedHours) || is_null($expectedMinutes) || is_null($expectedSeconds) || is_null($expectedFrames) || is_null($expectedFramerate)) {
-            $this->exception(function() use ($testedClass, $timecodeStr, $framerate) {
+            $this->exception(function () use ($testedClass, $timecodeStr, $framerate) {
                 is_null($framerate) ? $testedClass::createFromString($timecodeStr) : $testedClass::createFromString($timecodeStr, $framerate);
             })
                 ->isInstanceOf('InvalidArgumentException')

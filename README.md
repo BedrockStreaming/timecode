@@ -1,6 +1,6 @@
 # m6web/timecode
 
-[![Build Status](https://travis-ci.org/M6Web/timecode.svg?branch=master)](https://travis-ci.org/M6Web/timecode)
+[![Build Status](https://github.com/BedrockStreaming/timecode/actions/workflows/ci.yml/badge.svg)](https://github.com/BedrockStreaming/timecode/actions/workflows/ci.yml) [![Latest Stable Version](http://poser.pugx.org/m6web/timecode/v)](https://packagist.org/packages/m6web/timecode) [![Total Downloads](http://poser.pugx.org/m6web/timecode/downloads)](https://packagist.org/packages/m6web/timecode) [![License](http://poser.pugx.org/m6web/timecode/license)](https://packagist.org/packages/m6web/timecode) [![PHP Version Require](http://poser.pugx.org/m6web/timecode/require/php)](https://packagist.org/packages/m6web/timecode)
 
 Tiny PHP library to deal with [(SMPTE) timecode](https://en.wikipedia.org/wiki/SMPTE_timecode) through Timecode object representation.
 

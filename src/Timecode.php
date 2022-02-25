@@ -7,42 +7,26 @@ namespace M6Web\Component\Timecode;
  */
 class Timecode
 {
-    /**
-     * @var float
-     */
-    const DEFAULT_FRAMERATE = 25.0;
+    /** @var float */
+    public const DEFAULT_FRAMERATE = 25.0;
 
-    /**
-     * @var float
-     */
+    /** @var float */
     private $framerate;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $hours;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $minutes;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $seconds;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $frames;
 
     /**
-     * @param int   $hours
-     * @param int   $minutes
-     * @param int   $seconds
-     * @param int   $frames
-     * @param float $framerate By default, we use 25 which is the PAL or SECAM standard.
+     * @param float $framerate by default, we use 25 which is the PAL or SECAM standard
      */
     public function __construct(int $hours, int $minutes, int $seconds, int $frames, float $framerate = self::DEFAULT_FRAMERATE)
     {
@@ -60,12 +44,9 @@ class Timecode
      * - "hours:minutes:seconds:frames"
      * - "hours:minutes:seconds.milliseconds"
      *
-     * @param string $timecodeStr
-     * @param float  $framerate   By default, we use 25 which is the PAL or SECAM standard.
-     *
-     * @return self
+     * @param float $framerate by default, we use 25 which is the PAL or SECAM standard
      */
-    public static function createFromString(string $timecodeStr, float $framerate = self::DEFAULT_FRAMERATE) : self
+    public static function createFromString(string $timecodeStr, float $framerate = self::DEFAULT_FRAMERATE): self
     {
         // Support "hours:minutes:seconds:frames" notation
         if (!empty($matches = self::isFrameTimecode($timecodeStr))) {
@@ -100,10 +81,6 @@ class Timecode
      * Check if timecode use frame
      * if is valid return each part of timecode
      * if not, return empty array
-     *
-     * @param string $timecodeStr
-     *
-     * @return array
      */
     public static function isFrameTimecode(string $timecodeStr): array
     {
@@ -119,10 +96,6 @@ class Timecode
      * Check if timecode use milliseconds
      * if is valid return each part of timecode
      * if not, return empty array
-     *
-     * @param string $timecodeStr
-     *
-     * @return array
      */
     public static function isMillisecondsTimecode(string $timecodeStr): array
     {
@@ -137,12 +110,9 @@ class Timecode
     /**
      * Create a Timecode object representing a given number of frames.
      *
-     * @param int   $frames
-     * @param float $framerate By default, we use 25 which is the PAL or SECAM standard.
-     *
-     * @return self
+     * @param float $framerate by default, we use 25 which is the PAL or SECAM standard
      */
-    public static function createFromNumberOfFrames(int $frames, float $framerate = self::DEFAULT_FRAMERATE) : self
+    public static function createFromNumberOfFrames(int $frames, float $framerate = self::DEFAULT_FRAMERATE): self
     {
         $hours = floor($frames / (60 * 60 * $framerate));
         $frames -= 60 * 60 * $framerate * $hours;
@@ -160,10 +130,8 @@ class Timecode
 
     /**
      * Convert the Timecode to its corresponding number of frames
-     *
-     * @return int
      */
-    public function convertToFrames() : int
+    public function convertToFrames(): int
     {
         $totalFrames = $this->frames;
         $totalFrames += $this->framerate * $this->seconds;
@@ -175,82 +143,54 @@ class Timecode
 
     /**
      * Convert the Timecode to its corresponding number of seconds
-     *
-     * @return float
      */
-    public function convertToSeconds() : float
+    public function convertToSeconds(): float
     {
         return (float) ($this->convertToFrames() / $this->framerate);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() : string
+    public function __toString(): string
     {
         return sprintf('%02d:%02d:%02d:%02d', $this->hours, $this->minutes, $this->seconds, $this->frames);
     }
 
-    /**
-     * @return float
-     */
-    public function getFramerate() : float
+    public function getFramerate(): float
     {
         return $this->framerate;
     }
 
-    /**
-     * @return int
-     */
-    public function getHours() : int
+    public function getHours(): int
     {
         return $this->hours;
     }
 
-    /**
-     * @return int
-     */
-    public function getMinutes() : int
+    public function getMinutes(): int
     {
         return $this->minutes;
     }
 
-    /**
-     * @return int
-     */
-    public function getSeconds() : int
+    public function getSeconds(): int
     {
         return $this->seconds;
     }
 
-    /**
-     * @return int
-     */
-    public function getFrames() : int
+    public function getFrames(): int
     {
         return $this->frames;
     }
 
     /**
      * Return a new instance of Timecode after adding given $timecode to the current one
-     *
-     * @param Timecode $timecode
-     *
-     * @return self
      */
-    public function add(Timecode $timecode) : self
+    public function add(Timecode $timecode): self
     {
         return self::createFromNumberOfFrames($this->convertToFrames() + $timecode->convertToFrames(), $this->framerate);
     }
 
     /**
      * Return a new instance of Timecode after subtracting given $timecode from the current one
-     *
-     * @param Timecode $timecode
-     *
-     * @return self
      */
-    public function sub(Timecode $timecode) : self
+    public function sub(Timecode $timecode): self
     {
         return self::createFromNumberOfFrames($this->convertToFrames() - $timecode->convertToFrames(), $this->framerate);
     }
