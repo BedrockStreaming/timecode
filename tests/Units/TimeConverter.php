@@ -2,7 +2,7 @@
 
 namespace M6Web\Component\Timecode\Tests\Units;
 
-use atoum;
+use atoum\atoum;
 
 /**
  * TimeConverter test class

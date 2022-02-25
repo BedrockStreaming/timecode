@@ -6,18 +6,19 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Oliver Thébault",
-            "email": "oliver.thebault@gmail.com"
+            "name": "BedrockStreaming",
+            "email": "opensource@bedrockstreaming.com",
+            "homepage": "https://tech.bedrockstreaming.com/"
         }
     ],
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.4"
     },
     "require-dev": {
-        "atoum/atoum": "^3.0",
+        "atoum/atoum": "4.0.*",
         "atoum/stubs": "*",
-        "m6web/coke": "^2.1",
-        "m6web/symfony2-coding-standard": "^3.3"
+        "m6web/coke": "2.1.*",
+        "m6web/php-cs-fixer-config": "2.0.*"
     },
 	"autoload": {
         "psr-4": {

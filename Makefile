@@ -1,9 +1,15 @@
-.PHONY: test lint
+.PHONY: install
+install:
+	composer install
 
-all: lint test
+.PHONY: quality-fix
+quality-fix:
+	vendor/bin/php-cs-fixer fix
 
+.PHONY: lint
 lint:
-	vendor/bin/coke
+	vendor/bin/php-cs-fixer fix --ansi --dry-run --using-cache=no --verbose
 
+.PHONY: test
 test:
 	vendor/bin/atoum
